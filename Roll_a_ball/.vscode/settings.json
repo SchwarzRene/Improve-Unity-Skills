@@ -1,6 +1,7 @@
 {
     "dotnet.preferCSharpExtension": true,
     "files.exclude": {
-    "**/*.meta": true
-    }
+        "**/*.meta": true
+    },
+    "dotnet.defaultSolution": "Roll_a_ball.sln"
 }
