@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-
 public class player : MonoBehaviour
 {
     public float speed;
@@ -11,18 +9,40 @@ public class player : MonoBehaviour
     void Start()
     {
         movement = new Vector3(0, 0, 0);
+        rb = GetComponent<Rigidbody>();
     }
 
-    void OnMove(InputValue input)
+    void Update()
     {
-        Vector2 key_movement = input.Get<Vector2>();
-        movement.x = key_movement.x * speed;
-        movement.z = key_movement.y * speed;
+        
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        transform.position = transform.position + movement;
+        /*
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            rb.MovePosition(rb.position + new Vector3(0, 0, speed) * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            rb.MovePosition( rb.position + new Vector3(0, 0, -speed) * Time.deltaTime );
+        }
+        */
+
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            rb.linearVelocity = new Vector3(0, 0, speed);
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            rb.linearVelocity = new Vector3(0, 0, -speed);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector3(0, 0, 0);
+        }
     }
 }
