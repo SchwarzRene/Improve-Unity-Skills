@@ -42,7 +42,7 @@ public class RollerAgent : Agent
     {
         Vector3 controlSignal = Vector3.zero;
         controlSignal.x = actions.ContinuousActions[0];
-        controlSignal.y = actions.ContinuousActions[1];
+        controlSignal.z = actions.ContinuousActions[1];
 
         rBody.AddForce(controlSignal * forceMultiplier);
 
