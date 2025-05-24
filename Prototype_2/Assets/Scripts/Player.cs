@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         Vector2 inputVector = inputController.GetInputVectorNormalized();
+
+        
         //Transform
         Vector3 moveDir = new Vector3(inputVector.x, 0.0f, inputVector.y);
         transform.position += moveDir * playerSpeed * Time.deltaTime;
