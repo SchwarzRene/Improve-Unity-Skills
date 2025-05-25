@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - Wall
+  - BlueGoal
+  - RedGoal
+  - BluePlayer
+  - Ball
   layers:
   - Default
   - TransparentFX

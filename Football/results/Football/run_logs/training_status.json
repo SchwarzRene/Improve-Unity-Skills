@@ -1,0 +1,29 @@
+{
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 1533,
+                "file_path": "results\\Football\\Player\\Player-1533.onnx",
+                "reward": null,
+                "creation_time": 1748187154.0831237,
+                "auxillary_file_paths": [
+                    "results\\Football\\Player\\Player-1533.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1533,
+            "file_path": "results\\Football\\Player.onnx",
+            "reward": null,
+            "creation_time": 1748187154.0831237,
+            "auxillary_file_paths": [
+                "results\\Football\\Player\\Player-1533.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

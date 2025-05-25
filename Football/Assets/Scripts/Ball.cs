@@ -1,5 +1,3 @@
-using System;
-using Unity.MLAgents.Integrations.Match3;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -18,7 +16,7 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.linearVelocity -= rb.linearVelocity * dampingFactor * Time.deltaTime;
+        rb.linearVelocity *= dampingFactor;
     }
 
     public void ApplyKick(Vector3 direction)
@@ -28,7 +26,7 @@ public class Ball : MonoBehaviour
 
     public void Reset()
     {
-        transform.position = Vector3.zero;
+        transform.position = new Vector3(Random.value * 8 - 4, 0.0f, Random.value * 8 - 4);
         rb.linearVelocity = Vector3.zero;
     }
 
@@ -39,15 +37,10 @@ public class Ball : MonoBehaviour
             Vector3 collisionPoint = collision.contacts[0].point;
             Vector3 centerToCollisionVector = collisionPoint - rb.transform.position;
 
-            Debug.Log("Redirection Vector " + centerToCollisionVector);
-
             centerToCollisionVector.y = 0;
             centerToCollisionVector = -centerToCollisionVector;
 
-            Debug.Log("Redirection Vector " + centerToCollisionVector * wallBounceStrength);
-
             rb.AddForce(centerToCollisionVector * wallBounceStrength);
-            Debug.Log("Hit Wall");
         }
         if (collision.collider.CompareTag("RedGoal") || collision.collider.CompareTag("BlueGoal"))
         {

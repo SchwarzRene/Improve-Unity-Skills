@@ -1,13 +1,9 @@
-using System;
-using System.Security.Cryptography;
-using JetBrains.Annotations;
-using UnityEditor;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
 
-public class Player : MonoBehaviour
+public class Player : Agent
 {
     [SerializeField] private float playerSpeed = 10;
     [SerializeField] private float rotationSpeed = 10;
@@ -16,8 +12,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float kickStrength = 10;
     [SerializeField] private float kickAngle = 30;
     [SerializeField] private Ball ball;
+
+    [SerializeField] private GameObject goal;
+
     private Rigidbody rb;
     private Animator animator;
+
+    public float stepCount;
 
     void Start()
     {
@@ -27,8 +28,8 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.SetInteger("IsWalking", -1);
     }
-
-    public float[] GetPlayerInput()
+    
+    public override void Heuristic(in ActionBuffers actionsOut)
     {
         //Get Input for transformation movement
         float forwardSpeed = 0f;
@@ -67,14 +68,31 @@ public class Player : MonoBehaviour
             kick = 1;
         }
         float kickDirection = 0;
-        return new float[] { forwardSpeed, sideSpeed, rotation, kick, kickDirection };
+
+        var continousActions = actionsOut.ContinuousActions;
+        continousActions[0] = forwardSpeed;
+        continousActions[1] = sideSpeed;
+        continousActions[2] = rotation;
+        continousActions[3] = kick;
+        continousActions[4] = kickDirection;
     }
 
-    void Update()
+    public override void CollectObservations(VectorSensor sensor)
     {
+        sensor.AddObservation(ball.transform.position);
+        sensor.AddObservation(transform.position);
+    }
+    public override void OnActionReceived(ActionBuffers actions)
+    {
+        stepCount += 1;
+        AddReward(-0.0005f);
+        MoveAgent(actions);
+    }
 
-        float[] userInput = GetPlayerInput();
-        float forwardSpeed = userInput[0]; float sideSpeed = userInput[1]; float rotation = userInput[2]; float kick = userInput[3]; float kickDirection = userInput[4];
+
+    private void MoveAgent(ActionBuffers actions)
+    {
+        float forwardSpeed = actions.ContinuousActions[0]; float sideSpeed = actions.ContinuousActions[1]; float rotation = actions.ContinuousActions[2]; float kick = actions.ContinuousActions[3]; float kickDirection = actions.ContinuousActions[4];
 
         bool ballKicked = CheckForKick(kick, kickDirection);
 
@@ -97,10 +115,10 @@ public class Player : MonoBehaviour
         Vector3 moveDir = new Vector3(newForward.x, 0.0f, newForward.y);
 
         //Tranformation
-        rb.AddForce(moveDir * playerSpeed * Time.deltaTime, ForceMode.VelocityChange);
+        rb.AddForce(moveDir * playerSpeed, ForceMode.VelocityChange);
 
         //Rotation
-        Vector3 rotationVector = new Vector3(0, rotation * Time.deltaTime * rotationSpeed, 0);
+        Vector3 rotationVector = new Vector3(0, rotation * rotationSpeed, 0);
         transform.Rotate(rotationVector);
 
 
@@ -162,7 +180,8 @@ public class Player : MonoBehaviour
 
     public void Reset()
     {
-        transform.position = new Vector3(2, 0, -4);
+        transform.position = new Vector3(Random.value * 8 - 4, 0.0f, Random.value * 8 - 4);
         transform.eulerAngles = Vector3.zero;
+        stepCount = 1;
     }
 }
