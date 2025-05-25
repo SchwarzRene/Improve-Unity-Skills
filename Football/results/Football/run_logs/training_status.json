@@ -2,22 +2,22 @@
     "Player": {
         "checkpoints": [
             {
-                "steps": 1533,
-                "file_path": "results\\Football\\Player\\Player-1533.onnx",
+                "steps": 11384,
+                "file_path": "results\\Football\\Player\\Player-11384.onnx",
                 "reward": null,
-                "creation_time": 1748187154.0831237,
+                "creation_time": 1748190138.3025959,
                 "auxillary_file_paths": [
-                    "results\\Football\\Player\\Player-1533.pt"
+                    "results\\Football\\Player\\Player-11384.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 1533,
+            "steps": 11384,
             "file_path": "results\\Football\\Player.onnx",
             "reward": null,
-            "creation_time": 1748187154.0831237,
+            "creation_time": 1748190138.3025959,
             "auxillary_file_paths": [
-                "results\\Football\\Player\\Player-1533.pt"
+                "results\\Football\\Player\\Player-11384.pt"
             ]
         }
     },

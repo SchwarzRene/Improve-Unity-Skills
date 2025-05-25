@@ -7,7 +7,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private float dampingFactor;
 
     [SerializeField] private GameControll gameControll;
-    private Rigidbody rb;
+    public Rigidbody rb;
     void Start()
     {
         rb = GetComponent<Rigidbody>();

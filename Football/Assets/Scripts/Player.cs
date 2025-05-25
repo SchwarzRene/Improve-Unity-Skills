@@ -80,7 +80,10 @@ public class Player : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         sensor.AddObservation(ball.transform.position);
+        sensor.AddObservation(ball.rb.linearVelocity);
         sensor.AddObservation(transform.position);
+        sensor.AddObservation(transform.eulerAngles);
+        sensor.AddObservation(rb.linearVelocity);
     }
     public override void OnActionReceived(ActionBuffers actions)
     {
