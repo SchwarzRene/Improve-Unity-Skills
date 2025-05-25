@@ -17,11 +17,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float kickAngle = 30;
     [SerializeField] private Ball ball;
     private Rigidbody rb;
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
+
+        animator = GetComponent<Animator>();
+        animator.SetInteger("IsWalking", -1);
     }
 
     public float[] GetPlayerInput()
@@ -72,7 +76,7 @@ public class Player : MonoBehaviour
         float[] userInput = GetPlayerInput();
         float forwardSpeed = userInput[0]; float sideSpeed = userInput[1]; float rotation = userInput[2]; float kick = userInput[3]; float kickDirection = userInput[4];
 
-        CheckForKick( kick, kickDirection );
+        bool ballKicked = CheckForKick(kick, kickDirection);
 
         //The player moves with 3 values. 
         //One is for forth and back this happends with the forward vector
@@ -93,15 +97,47 @@ public class Player : MonoBehaviour
         Vector3 moveDir = new Vector3(newForward.x, 0.0f, newForward.y);
 
         //Tranformation
-        
-        rb.AddForce(moveDir * playerSpeed * Time.deltaTime, ForceMode.VelocityChange );
+        rb.AddForce(moveDir * playerSpeed * Time.deltaTime, ForceMode.VelocityChange);
         Debug.Log(rb.linearVelocity);
         //Rotation
         Vector3 rotationVector = new Vector3(0, rotation * Time.deltaTime * rotationSpeed, 0);
         transform.Rotate(rotationVector);
+
+
+        //Animation
+        if (ballKicked)
+        {
+            animator.SetInteger("IsWalking", -1);
+            animator.SetBool("IsShooting", true);
+        }
+        else
+        {
+            animator.SetBool("IsShooting", false);
+
+            if (forwardSpeed == 1)
+            {
+                animator.SetInteger("IsWalking", 0);
+            }
+            else if (forwardSpeed == -1)
+            {
+                animator.SetInteger("IsWalking", 2);
+            }
+            else if (sideSpeed == 1)
+            {
+                animator.SetInteger("IsWalking", 1);
+            }
+            else if (sideSpeed == -1)
+            {
+                animator.SetInteger("IsWalking", 3);
+            }
+            else
+            {
+                animator.SetInteger("IsWalking", -1);
+            }
+        }
     }
 
-    private void CheckForKick( float kick, float direction )
+    private bool CheckForKick(float kick, float direction)
     {
         RaycastHit hit;
         Vector3 boxCenter = rb.transform.position + new Vector3(0, 0.25f, 0);
@@ -109,15 +145,18 @@ public class Player : MonoBehaviour
         if (Physics.BoxCast(boxCenter, boxSize, rb.transform.forward, out hit, rb.transform.rotation, 0.25f))
         {
             Debug.Log(hit.collider.gameObject.name);
-            if ( hit.collider.gameObject.name == "Ball" && kick > 0.5 )
+            if (hit.collider.gameObject.name == "Ball" && kick > 0.5)
             {
                 direction = Mathf.Clamp(direction, -1f, 1f);
-                float angle = Mathf.Lerp(-kickAngle, kickAngle, (direction + 1f) / 2f); 
+                float angle = Mathf.Lerp(-kickAngle, kickAngle, (direction + 1f) / 2f);
 
-                Quaternion rotation = Quaternion.Euler(0f, angle, 0f); 
-                Vector3 rotatedDirection = rotation * rb.transform.forward; 
+                Quaternion rotation = Quaternion.Euler(0f, angle, 0f);
+                Vector3 rotatedDirection = rotation * rb.transform.forward;
                 ball.ApplyKick(rotatedDirection * kickStrength);
+
+                return true;
             }
         }
+        return false;
     }
 }

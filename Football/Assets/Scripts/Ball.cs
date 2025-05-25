@@ -1,3 +1,5 @@
+using System;
+using Unity.MLAgents.Integrations.Match3;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -15,8 +17,17 @@ public class Ball : MonoBehaviour
 
     }
 
-    public void ApplyKick( Vector3 direction )
+    public void ApplyKick(Vector3 direction)
     {
         rb.AddForce(direction);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Wall"))
+        {
+            Debug.Log("Hit Wall");
+        }       
+    }
+
 }
