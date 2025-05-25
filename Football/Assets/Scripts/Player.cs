@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
 
         //Tranformation
         rb.AddForce(moveDir * playerSpeed * Time.deltaTime, ForceMode.VelocityChange);
-        Debug.Log(rb.linearVelocity);
+        
         //Rotation
         Vector3 rotationVector = new Vector3(0, rotation * Time.deltaTime * rotationSpeed, 0);
         transform.Rotate(rotationVector);
@@ -144,7 +144,7 @@ public class Player : MonoBehaviour
         Vector3 boxSize = Vector3.one * 0.25f;
         if (Physics.BoxCast(boxCenter, boxSize, rb.transform.forward, out hit, rb.transform.rotation, 0.25f))
         {
-            Debug.Log(hit.collider.gameObject.name);
+            
             if (hit.collider.gameObject.name == "Ball" && kick > 0.5)
             {
                 direction = Mathf.Clamp(direction, -1f, 1f);
