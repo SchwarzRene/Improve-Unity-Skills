@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerSpeed = 10;
     [SerializeField] private float rotationSpeed = 10;
 
-    
+
     [SerializeField] private float kickStrength = 10;
     [SerializeField] private float kickAngle = 30;
     [SerializeField] private Ball ball;
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
 
         //Tranformation
         rb.AddForce(moveDir * playerSpeed * Time.deltaTime, ForceMode.VelocityChange);
-        
+
         //Rotation
         Vector3 rotationVector = new Vector3(0, rotation * Time.deltaTime * rotationSpeed, 0);
         transform.Rotate(rotationVector);
@@ -144,7 +144,7 @@ public class Player : MonoBehaviour
         Vector3 boxSize = Vector3.one * 0.25f;
         if (Physics.BoxCast(boxCenter, boxSize, rb.transform.forward, out hit, rb.transform.rotation, 0.25f))
         {
-            
+
             if (hit.collider.gameObject.name == "Ball" && kick > 0.5)
             {
                 direction = Mathf.Clamp(direction, -1f, 1f);
@@ -158,5 +158,11 @@ public class Player : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void Reset()
+    {
+        transform.position = new Vector3(2, 0, -4);
+        transform.eulerAngles = Vector3.zero;
     }
 }

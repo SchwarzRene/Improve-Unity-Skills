@@ -26,6 +26,12 @@ public class Ball : MonoBehaviour
         rb.AddForce(direction);
     }
 
+    public void Reset()
+    {
+        transform.position = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Wall"))
