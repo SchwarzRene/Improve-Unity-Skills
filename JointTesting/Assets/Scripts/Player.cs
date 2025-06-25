@@ -2,65 +2,46 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is create
-    [SerializeField] GameObject joint1object;
-    [SerializeField] GameObject joint2object;
+    [Header("Joint GameObjects")]
+    [SerializeField] private GameObject jointParent;
+    [SerializeField] private GameObject jointParent2;
 
-    private ConfigurableJoint joint1;
-    private ConfigurableJoint joint2;
-
+    [Header("Target Angles")]
     public float angle;
     public float angle2;
 
-    public float projectionDistance = 1f;
-    public float projectionAngle = 0.1f;
+    private HingeJoint joint;
+    private HingeJoint joint2;
 
-    public float positionSpring = 10000;
-    public float positionDamper = 1000;
-    private JointDrive drive;
+    private const float motorForce = 100f;
+    private const float velocityMultiplier = 10f;
+
     void Start()
     {
-        drive = new JointDrive
-        {
-            positionSpring = 100000f,        // Adjust for stronger holding
-            positionDamper = 100000f,         // Damping for stability
-            maximumForce = Mathf.Infinity  // Infinite force to resist motion
-        };
+        joint = jointParent.GetComponent<HingeJoint>();
+        joint.useMotor = true;
+        angle = joint.angle;
 
-        joint1 = joint1object.GetComponent<ConfigurableJoint>();
-        joint1.angularYZDrive = drive;
-        joint1.projectionMode = JointProjectionMode.PositionAndRotation;
-
-
-
-        joint2 = joint2object.GetComponent<ConfigurableJoint>();
-        joint2.angularYZDrive = drive;
-        joint2.projectionMode = JointProjectionMode.PositionAndRotation;
-
-
+        joint2 = jointParent2.GetComponent<HingeJoint>();
+        joint2.useMotor = true;
+        angle2 = joint2.angle;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        drive = new JointDrive
-        {
-            positionSpring = positionSpring,        // Adjust for stronger holding
-            positionDamper = positionDamper,         // Damping for stability
-            maximumForce = Mathf.Infinity  // Infinite force to resist motion
-        };
+        UpdateJointMotor(joint, angle);
+        UpdateJointMotor(joint2, angle2);
+    }
 
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
-        joint1.projectionDistance = projectionDistance;
-        joint1.projectionAngle = projectionAngle;
-        joint1.angularYZDrive = drive;
-        joint1.targetRotation = Quaternion.Inverse(targetRotation);
+    private void UpdateJointMotor(HingeJoint hinge, float targetAngle)
+    {
+        float currentAngle = hinge.angle;
+        float angleDifference = targetAngle - currentAngle;
 
+        JointMotor motor = hinge.motor;
+        motor.force = motorForce;
+        motor.targetVelocity = angleDifference * velocityMultiplier;
 
-        Quaternion targetRotation2 = Quaternion.Euler(0f, 0f, angle2);
-        joint2.projectionDistance = projectionDistance;
-        joint2.projectionAngle = projectionAngle;
-        joint2.angularYZDrive = drive;
-        joint2.targetRotation = Quaternion.Inverse(targetRotation2);
+        hinge.motor = motor;
     }
 }
