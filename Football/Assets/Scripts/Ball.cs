@@ -26,7 +26,7 @@ public class Ball : MonoBehaviour
 
     public void Reset()
     {
-        transform.position = new Vector3(Random.value * 8 - 4, 0.0f, Random.value * 8 - 4);
+        transform.localPosition = new Vector3(Random.value * 8 - 4, 0.0f, Random.value * 8 - 4);
         rb.linearVelocity = Vector3.zero;
     }
 
@@ -35,7 +35,7 @@ public class Ball : MonoBehaviour
         if (collision.collider.CompareTag("Wall"))
         {
             Vector3 collisionPoint = collision.contacts[0].point;
-            Vector3 centerToCollisionVector = collisionPoint - rb.transform.position;
+            Vector3 centerToCollisionVector = collisionPoint - rb.transform.localPosition;
 
             centerToCollisionVector.y = 0;
             centerToCollisionVector = -centerToCollisionVector;
